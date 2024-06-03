@@ -6,7 +6,7 @@ name: Build image
 on:
   push:
     branches:
-      - 'ignacio-dev'
+      - 'v2.7.3-AI4OS'
 
 jobs:
   build:
@@ -36,3 +36,11 @@ jobs:
           push: true
           tags: ${{ vars.HARBOR_URL }}/ai4os/ai4-cvat-server:${{ github.ref_name }}
           file: ./Dockerfile
+
+      - name: Build and push (ui)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ vars.HARBOR_URL }}/ai4os/ai4-cvat-ui:${{ github.ref_name }}
+          file: ./Dockerfile.ui
