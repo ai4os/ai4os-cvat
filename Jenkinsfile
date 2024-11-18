@@ -18,7 +18,9 @@ pipeline {
     }
     environment {
         // Remove .git from the GIT_URL link
-        THIS_REPO = "${env.GIT_URL.endsWith(".git") ? env.GIT_URL[0..-5] : env.GIT_URL}"
+        //AI4OS_CVAT_REPO = "${env.GIT_URL.endsWith(".git") ? env.GIT_URL[0..-5] : env.GIT_URL}"
+        //AI4OS_CVAT_REPO = AI4OS_CVAT_REPO.tokenize('/.')[-2] // need to test this code vk@241118
+        AI4OS_CVAT_REPO = "ai4os-cvat"
         DEFAULT_BRANCH = "v2.7.3-AI4OS"
         METADATA_VERSION = "2.0.0"
         AI4OS_REGISTRY_CREDENTIALS = credentials('AIOS-registry-credentials')
@@ -79,9 +81,14 @@ pipeline {
                 script {
                     // Check if only metadata files have been changed
                     // See https://github.com/ai4os/ai4os-hub-qa/issues/16
-                    if (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT) {
+                    // If GIT_PREVIOUS_SUCCESSFUL_COMMIT fails
+                    // (e.g. First time build, commits were rewritten by user),
+                    // we fallback to last commit
+                    try {
                         changed_files = sh (returnStdout: true, script: "git diff --name-only HEAD ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}").trim()
-                    } else {
+                    } catch (err) {
+                        println("[WARNING] Exception: ${err}")
+                        println("[INFO] Considering changes only in the last commit..")
                         changed_files = sh (returnStdout: true, script: "git diff --name-only HEAD^ HEAD").trim()
                     }
                     need_build = true
@@ -117,7 +124,7 @@ pipeline {
                 script {
                     checkout scm
                     dockerfile = "Dockerfile"
-                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + "ai4-cvat-server:" + env.IMAGE_TAG).toLowerCase()
+                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + env.AI4OS_CVAT_REPO + "-server:" + env.IMAGE_TAG).toLowerCase()
                     println ("[DEBUG] Config for the Docker image build: ${docker_repo}, push to $env.DOCKER_REGISTRY")
                     docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_REGISTRY_CREDENTIALS){
                          def app_image = docker.build(docker_repo,
@@ -150,7 +157,7 @@ pipeline {
                 script {
                     checkout scm
                     dockerfile = "Dockerfile.ui"
-                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + "ai4-cvat-ui:" + env.IMAGE_TAG).toLowerCase()
+                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + env.AI4OS_CVAT_REPO + "-ui:" + env.IMAGE_TAG).toLowerCase()
                     println ("[DEBUG] Config for the Docker image build: ${docker_repo}, push to $env.DOCKER_REGISTRY")
                     docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_REGISTRY_CREDENTIALS){
                          def app_image = docker.build(docker_repo,
