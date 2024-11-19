@@ -3,7 +3,8 @@ title: CVAT Image Annotation
 summary: Image annotation tool that uses the Computer Vision Annotation Tool (CVAT)
 description: |-
   Annotate and label your images and videos with the open source [Computer Vision Annotation Tool (CVAT)](https://www.cvat.ai/).
-  CVAT has an automated labeling features, enhancing the annotation process significantly, for more information, please, (check here)[https://docs.cvat.ai/docs/getting_started/overview/#automated-labeling].
+  
+  CVAT has an automated labeling features, enhancing the annotation process significantly, for more information, please, [check here](https://docs.cvat.ai/docs/getting_started/overview/#automated-labeling).
 
   <img class='fit', src='https://raw.githubusercontent.com/ai4os/ai4os-cvat/refs/heads/v2.7.3-AI4OS/site/content/en/images/cvat-ai-screencast.gif'/>
 
