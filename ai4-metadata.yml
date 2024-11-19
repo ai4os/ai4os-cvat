@@ -2,7 +2,8 @@ metadata_version: 2.0.0
 title: CVAT Image Annotation
 summary: Image annotation tool that uses the Computer Vision Annotation Tool (CVAT)
 description: |-
-  Annotate and label your images with the [Computer Vision Annotation Tool (CVAT)](https://www.cvat.ai/).
+  Annotate and label your images and videos with the open source [Computer Vision Annotation Tool (CVAT)](https://www.cvat.ai/).
+  CVAT has an automated labeling features, enhancing the annotation process significantly, for more information, please, (check here)[https://docs.cvat.ai/docs/getting_started/overview/#automated-labeling].
   
   <img class='fit', src='https://raw.githubusercontent.com/ai4os/ai4os-cvat/refs/heads/v2.7.3-AI4OS/site/content/en/images/cvat-ai-screencast.gif'/>
 
@@ -11,16 +12,18 @@ dates:
   created: '2024-07-01'
   updated: '2024-08-12'
 links:
-  source_code: https://github.com/ai4os/ai4-cvat
-  docker_image: registry.services.ai4os.eu/ai4os/ai4-cvat-ui
+  source_code: https://github.com/ai4os/ai4os-cvat
+  docker_image: ai4oshub/ai4os-cvat-ui
   ai4_template: ai4-template/1.9.9
 tags:
-  - federated learning
+  - annotation
+  - data preparation
 tasks:
-  - Other
+  - Computer Vision
 categories:
   - AI4 tools
 libraries:
   - Other
 data-type:
-  - Other
+  - Image
+  - Video
