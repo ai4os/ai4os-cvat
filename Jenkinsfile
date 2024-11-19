@@ -35,8 +35,11 @@ pipeline {
                         env.DOCKER_REGISTRY_ORG = env.AI4OS_REGISTRY_REPOSITORY
                         env.DOCKER_REGISTRY_CREDENTIALS = env.AI4OS_REGISTRY_CREDENTIALS
                     }
-                    // define tag based on branch
+                    // docker repository
+                    env.DOCKER_REPO = env.DOCKER_REGISTRY_ORG + "/" + env.AI4OS_CVAT_REPO
+                    // define base tag from branch name
                     env.IMAGE_TAG = "${env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME}"
+
                 }
             }
         }
@@ -124,10 +127,11 @@ pipeline {
                 script {
                     checkout scm
                     dockerfile = "Dockerfile"
-                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + env.AI4OS_CVAT_REPO + "-server:" + env.IMAGE_TAG).toLowerCase()
-                    println ("[DEBUG] Config for the Docker image build: ${docker_repo}, push to $env.DOCKER_REGISTRY")
+                    image_tag = env.IMAGE_TAG + "-server"
+                    image = (env.DOCKER_REPO + ":" + image_tag).toLowerCase()
+                    println ("[DEBUG] Config for the Docker image build: ${image}, push to $env.DOCKER_REGISTRY")
                     docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_REGISTRY_CREDENTIALS){
-                         def app_image = docker.build(docker_repo,
+                         def app_image = docker.build(image,
                                                       "--no-cache --force-rm -f ${dockerfile} .")
                          app_image.push()
                     }
@@ -157,10 +161,11 @@ pipeline {
                 script {
                     checkout scm
                     dockerfile = "Dockerfile.ui"
-                    docker_repo = (env.DOCKER_REGISTRY_ORG + "/" + env.AI4OS_CVAT_REPO + "-ui:" + env.IMAGE_TAG).toLowerCase()
-                    println ("[DEBUG] Config for the Docker image build: ${docker_repo}, push to $env.DOCKER_REGISTRY")
+                    image_tag = env.IMAGE_TAG + "-ui"
+                    image = (env.DOCKER_REPO + ":" + image_tag).toLowerCase()
+                    println ("[DEBUG] Config for the Docker image build: ${image}, push to $env.DOCKER_REGISTRY")
                     docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_REGISTRY_CREDENTIALS){
-                         def app_image = docker.build(docker_repo,
+                         def app_image = docker.build(image,
                                                       "--no-cache --force-rm -f ${dockerfile} .")
                          app_image.push()
                     }
