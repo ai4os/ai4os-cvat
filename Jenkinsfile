@@ -19,7 +19,7 @@ pipeline {
     environment {
         // Remove .git from the GIT_URL link and extract REPO_NAME from GIT_URL
         REPO_URL = "${env.GIT_URL.endsWith(".git") ? env.GIT_URL[0..-5] : env.GIT_URL}"
-        AI4OS_CVAT_REPO = REPO_URL.tokenize('/')[-1]
+        AI4OS_CVAT_REPO = "${REPO_URL.tokenize('/')[-1]}"
         DEFAULT_BRANCH = "v2.7.3-AI4OS"
         METADATA_VERSION = "2.0.0"
         AI4OS_REGISTRY_CREDENTIALS = credentials('AIOS-registry-credentials')
