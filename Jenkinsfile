@@ -17,10 +17,9 @@ pipeline {
         label 'docker'
     }
     environment {
-        // Remove .git from the GIT_URL link
-        //AI4OS_CVAT_REPO = "${env.GIT_URL.endsWith(".git") ? env.GIT_URL[0..-5] : env.GIT_URL}"
-        //AI4OS_CVAT_REPO = AI4OS_CVAT_REPO.tokenize('/.')[-2] // need to test this code vk@241118
-        AI4OS_CVAT_REPO = "ai4os-cvat"
+        // Remove .git from the GIT_URL link and extract REPO_NAME from GIT_URL
+        AI4OS_CVAT_REPO = "${env.GIT_URL.endsWith(".git") ? env.GIT_URL[0..-5] : env.GIT_URL}"
+        AI4OS_CVAT_REPO = AI4OS_CVAT_REPO.tokenize('/')[-1]
         DEFAULT_BRANCH = "v2.7.3-AI4OS"
         METADATA_VERSION = "2.0.0"
         AI4OS_REGISTRY_CREDENTIALS = credentials('AIOS-registry-credentials')
