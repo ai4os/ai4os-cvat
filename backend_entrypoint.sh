@@ -28,6 +28,11 @@ cmd_init() {
     ~/manage.py syncperiodicjobs
 }
 
+cmd_ensuresuperuser() {
+    wait_for_db
+    ~/manage.py ensuresuperuser --no-input
+}
+
 cmd_run() {
     if [ "$#" -ne 1 ]; then
         fail "run: expected 1 argument"
