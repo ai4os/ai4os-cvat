@@ -6,7 +6,7 @@ name: Build image
 on:
   push:
     branches:
-      - 'v2.25.0-AI4OS'
+      - 'v2.28.0-AI4OS'
 
 jobs:
   build:

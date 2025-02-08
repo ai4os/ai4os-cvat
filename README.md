@@ -1,12 +1,12 @@
 > # 📌 AI4OS fork
-> [![Build image](https://github.com/ai4os/ai4-cvat/actions/workflows/ai4os-docker.yml/badge.svg)](https://github.com/ai4os/ai4-cvat/actions/workflows/ai4os-docker.yml) [![Build Status](https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS%2Fai4os-cvat%2Fv2.25.0-AI4OS)](https://jenkins.services.ai4os.eu/job/ai4os/job/ai4os-cvat/job/v2.25.0-AI4OS/)
+> [![Build image](https://github.com/ai4os/ai4-cvat/actions/workflows/ai4os-docker.yml/badge.svg)](https://github.com/ai4os/ai4-cvat/actions/workflows/ai4os-docker.yml) [![Build Status](https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS%2Fai4os-cvat%2Fv2.28.0-AI4OS)](https://jenkins.services.ai4os.eu/job/ai4os/job/ai4os-cvat/job/v2.28.0-AI4OS/)
 >
 > This is a fork of [CVAT](https://github.com/cvat-ai/cvat) to make it work with the [AI4OS platform](https://docs.ai4eosc.eu/).
 >
 > The customized Docker images are built to the platform's [Harbor registry](https://registry.services.ai4os.eu/)
 > and can be used as following:
-> * `docker run registry.services.ai4os.eu/ai4os/ai4-cvat-server:v2.25.0-AI4OS`
-> * `docker run registry.services.ai4os.eu/ai4os/ai4-cvat-ui:v2.25.0-AI4OS`
+> * `docker run registry.services.ai4os.eu/ai4os/ai4-cvat-server:v2.28.0-AI4OS`
+> * `docker run registry.services.ai4os.eu/ai4os/ai4-cvat-ui:v2.28.0-AI4OS`
 
 ***
 
