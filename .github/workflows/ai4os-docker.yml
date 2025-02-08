@@ -34,7 +34,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.HARBOR_URL }}/ai4os/ai4-cvat-server:${{ github.ref_name }}
+          tags: ${{ vars.HARBOR_URL }}/ai4os/ai4os-cvat-server:${{ github.ref_name }}
           file: ./Dockerfile
 
       - name: Build and push (ui)
@@ -42,5 +42,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.HARBOR_URL }}/ai4os/ai4-cvat-ui:${{ github.ref_name }}
+          tags: ${{ vars.HARBOR_URL }}/ai4os/ai4os-cvat-ui:${{ github.ref_name }}
           file: ./Dockerfile.ui
