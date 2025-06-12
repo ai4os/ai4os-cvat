@@ -59,97 +59,42 @@ from cvat.apps.lambda_manager.serializers import (
 )
 from cvat.apps.lambda_manager.signals import interactive_function_call_signal
 from cvat.utils.http import make_requests_session
+from oscar_python.client import Client
 
 slogger = ServerLogManager(__name__)
 
+options_oidc_refresh_token = {'cluster_id': 'cluster-id',
+                     'endpoint': os.getenv("OSCAR_URL"),
+                     'refresh_token': os.getenv("OSCAR_REFRESH_TOKEN"),
+                     'ssl': 'True'}
+
+OSCAR = Client(options=options_oidc_refresh_token)
+
+# Filter
+def cvat_service(s):
+    return s["name"].startswith("cvat")
 
 class LambdaGateway:
-    NUCLIO_ROOT_URL = "/api/functions"
 
-    def _http(
-        self,
-        method="get",
-        scheme=None,
-        host=None,
-        port=None,
-        function_namespace=None,
-        url=None,
-        headers=None,
-        data=None,
-    ):
-        NUCLIO_GATEWAY = "{}://{}:{}".format(
-            scheme or settings.NUCLIO["SCHEME"],
-            host or settings.NUCLIO["HOST"],
-            port or settings.NUCLIO["PORT"],
-        )
-        NUCLIO_FUNCTION_NAMESPACE = function_namespace or settings.NUCLIO["FUNCTION_NAMESPACE"]
-        NUCLIO_TIMEOUT = settings.NUCLIO["DEFAULT_TIMEOUT"]
-        extra_headers = {
-            "x-nuclio-project-name": "cvat",
-            "x-nuclio-function-namespace": NUCLIO_FUNCTION_NAMESPACE,
-            "x-nuclio-invoke-via": "domain-name",
-            "X-Nuclio-Invoke-Timeout": f"{NUCLIO_TIMEOUT}s",
-        }
-        if headers:
-            extra_headers.update(headers)
-
-        if url:
-            url = "{}{}".format(NUCLIO_GATEWAY, url)
-        else:
-            url = NUCLIO_GATEWAY
-
-        with make_requests_session() as session:
-            reply = session.request(
-                method, url, headers=extra_headers, timeout=NUCLIO_TIMEOUT, json=data
-            )
-            reply.raise_for_status()
-            response = reply.json()
-
-        return response
-
+    # 1) GET THE LIST OF THE MODELS FROM OSCAR
     def list(self):
-        data = self._http(url=self.NUCLIO_ROOT_URL)
-        for item in data.values():
+        services = filter(cvat_service, OSCAR.list_services().json())
+        for item in services:
             try:
-                yield LambdaFunction(self, item)
+                yield LambdaFunction(self, json.loads(item["environment"]["variables"]["DATA"]))
             except InvalidFunctionMetadataError:
                 slogger.glob.error("Failed to parse lambda function metadata", exc_info=True)
 
+    # 2) GET THE MODEL BY ITS ID BEFORE ITS INVOCATION
     def get(self, func_id):
-        data = self._http(url=self.NUCLIO_ROOT_URL + "/" + func_id)
+        data = json.loads(OSCAR.get_service(func_id).json()["environment"]["variables"]["DATA"])
         response = LambdaFunction(self, data)
         return response
 
+    # 3) INVOKE THE MODEL
     def invoke(self, func, payload):
-        invoke_method = {
-            "dashboard": self._invoke_via_dashboard,
-            "direct": self._invoke_directly,
-        }
-
-        return invoke_method[settings.NUCLIO["INVOKE_METHOD"]](func, payload)
-
-    def _invoke_via_dashboard(self, func, payload):
-        return self._http(
-            method="post",
-            url="/api/function_invocations",
-            data=payload,
-            headers={"x-nuclio-function-name": func.id, "x-nuclio-path": "/"},
-        )
-
-    def _invoke_directly(self, func, payload):
-        # host.docker.internal for Linux will work only with Docker 20.10+
-        NUCLIO_TIMEOUT = settings.NUCLIO["DEFAULT_TIMEOUT"]
-        if os.path.exists("/.dockerenv"):  # inside a docker container
-            url = f"http://host.docker.internal:{func.port}"
-        else:
-            url = f"http://localhost:{func.port}"
-
-        with make_requests_session() as session:
-            reply = session.post(url, timeout=NUCLIO_TIMEOUT, json=payload)
-            reply.raise_for_status()
-            response = reply.json()
-
-        return response
+        response = OSCAR.run_service(func.id, input=json.dumps(payload))
+        return json.loads(response.text)
 
 
 class InvalidFunctionMetadataError(Exception):
