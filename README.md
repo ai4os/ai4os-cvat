@@ -1,5 +1,5 @@
 > # 📌 AI4OS fork
-> [![Build image](https://github.com/ai4os/ai4os-cvat/actions/workflows/ai4os-docker.yml/badge.svg)](https://github.com/ai4os/ai4os-cvat/actions/workflows/ai4os-docker.yml) [![Build Status](https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS%2Fai4os-cvat%2Fv2.28.0-AI4OS)](https://jenkins.services.ai4os.eu/job/ai4os/job/ai4os-cvat/job/v2.28.0-AI4OS/)
+> [![Build image](https://github.com/ai4os/ai4os-cvat/actions/workflows/ai4os-docker.yml/badge.svg)](https://github.com/ai4os/ai4os-cvat/actions/workflows/ai4os-docker.yml) [![Build Status](https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS%2Fai4os-cvat%2Fv2.28.0-AI4OS-OSCAR)](https://jenkins.services.ai4os.eu/job/ai4os/job/ai4os-cvat/job/v2.28.0-AI4OS-OSCAR/)
 >
 > This is a fork of [CVAT](https://github.com/cvat-ai/cvat) to make it work with the [AI4OS platform](https://docs.ai4eosc.eu/).
 >
