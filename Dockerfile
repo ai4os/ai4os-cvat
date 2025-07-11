@@ -201,9 +201,6 @@ RUN if [ "${CVAT_DEBUG_ENABLED}" = 'yes' ]; then \
         python3 -m pip install --no-cache-dir debugpy; \
     fi
 
-
-#RUN pip install git+https://github.com/grycap/oscar_python
-RUN pip install oscar-python==1.3.1
 # Removing pip due to security reasons. See: https://scout.docker.com/vulnerabilities/id/CVE-2018-20225
 # The vulnerability is dubious and we don't use pip at runtime, but some vulnerability scanners mark it as a high vulnerability,
 # and it was decided to remove pip from the final image
