@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - 'v2.28.0-AI4OS'
+  workflow_dispatch:
 
 jobs:
   build:
